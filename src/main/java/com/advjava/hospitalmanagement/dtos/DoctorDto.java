@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CreateDoctorRequest {
+public class DoctorDto {
+    private Integer id;
     private String fullName;
     private String email;
-    private String password;
     private String specialization;
 }

@@ -1,0 +1,4 @@
+ALTER TABLE doctors
+    ADD COLUMN email VARCHAR(255),
+    ADD COLUMN password VARCHAR(255),
+    ADD COLUMN role VARCHAR(50);

@@ -1,6 +1,8 @@
 package com.advjava.hospitalmanagement.config;
 
+import com.advjava.hospitalmanagement.entities.UserRole;
 import com.advjava.hospitalmanagement.filters.JwtAuthenticationFilter;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,10 +24,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
 
     private UserDetailsService userDetailsService;
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -45,6 +49,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(c -> c
                         .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST,"/patient/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/doctors/add").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.DELETE, "/doctors/{id}").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.DELETE, "/patient/delete/{id}").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET, "/patient/all").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers("/appointments/update/approve/{id}").hasRole(UserRole.DOCTOR.name())
+                        .requestMatchers("/appointments/doctors/{id}").hasRole(UserRole.DOCTOR.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

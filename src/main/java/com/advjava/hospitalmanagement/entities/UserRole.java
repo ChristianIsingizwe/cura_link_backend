@@ -1,5 +1,5 @@
 package com.advjava.hospitalmanagement.entities;
 
 public enum UserRole {
-    PATIENT, ADMIN
+    PATIENT, ADMIN, DOCTOR;
 }

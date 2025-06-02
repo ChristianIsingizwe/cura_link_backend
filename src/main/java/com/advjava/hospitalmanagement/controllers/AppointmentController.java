@@ -36,12 +36,16 @@ public class AppointmentController {
 
     @GetMapping("/doctors/{id}")
     public ResponseEntity<?> getAllAppointmentsByDoctorId(@PathVariable Integer id) {
-        return ResponseEntity.ok(appointmentRepository.findByDoctorId(id));
+        var appointments = appointmentRepository.findByDoctorId(id);
+        var appointmentsDtos = appointments.stream().map(appointmentMapper::toDto).toList();
+        return ResponseEntity.ok(appointmentsDtos);
     }
 
     @GetMapping("/patients/{id}")
     public ResponseEntity<?> getAllAppointmentsByPatientId(@PathVariable Integer id) {
-        return ResponseEntity.ok(appointmentRepository.findByPatientId(id));
+        var appointments = appointmentRepository.findByPatientId(id);
+        var appointmentsDtos = appointments.stream().map(appointmentMapper::toDto).toList();
+        return ResponseEntity.ok(appointmentsDtos);
     }
 
     @DeleteMapping("/{id}")

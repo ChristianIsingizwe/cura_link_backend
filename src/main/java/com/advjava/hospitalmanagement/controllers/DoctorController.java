@@ -2,11 +2,14 @@ package com.advjava.hospitalmanagement.controllers;
 
 
 import com.advjava.hospitalmanagement.dtos.CreateDoctorRequest;
+import com.advjava.hospitalmanagement.entities.UserRole;
 import com.advjava.hospitalmanagement.mappers.DoctorMapper;
 import com.advjava.hospitalmanagement.repositories.DoctorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -20,14 +23,18 @@ public class DoctorController {
     @GetMapping
     public ResponseEntity<?> getAllDoctors() {
         var doctors = doctorRepository.findAll();
-        return ResponseEntity.ok(doctors);
+        var doctorDtos =doctors.stream().map(doctorMapper::toDto).toList();
+        return ResponseEntity.ok(doctorDtos);
     }
 
     @PostMapping
     public ResponseEntity<?> addDoctor(@RequestBody CreateDoctorRequest request){
         var doctor = doctorMapper.toEntity(request);
+        doctor.setRole(UserRole.DOCTOR);
         doctorRepository.save(doctor);
-        return ResponseEntity.ok(doctor);
+
+        var doctorDto = doctorMapper.toDto(doctor);
+        return ResponseEntity.ok(doctorDto);
     }
 
     @GetMapping("/{specialization}")
@@ -36,7 +43,8 @@ public class DoctorController {
         if (doctors == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(doctors);
+        var doctorDtos =doctors.stream().map(doctorMapper::toDto).toList();
+        return ResponseEntity.ok(doctorDtos);
     }
 
     @GetMapping("/{id}")
@@ -45,7 +53,8 @@ public class DoctorController {
         if (doctor.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(doctor);
+        var doctorDto = doctorMapper.toDto(doctor.get());
+        return ResponseEntity.ok(doctorDto);
     }
 
     @DeleteMapping("/{id}")

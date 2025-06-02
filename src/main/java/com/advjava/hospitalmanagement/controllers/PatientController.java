@@ -48,7 +48,9 @@ public class PatientController {
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllPatients() {
-        return ResponseEntity.ok(userRepository.findAll());
+        var patients = userRepository.findAll();
+        var patientDtos =patients.stream().map(patientMapper::toDto).toList();
+        return ResponseEntity.ok(patientDtos);
     }
 
     @GetMapping("/{id}")
@@ -56,7 +58,8 @@ public class PatientController {
         if (userRepository.findById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(userRepository.findById(id).get());
+        var patientDto = patientMapper.toDto(userRepository.findById(id).get());
+        return ResponseEntity.ok(patientDto);
     }
 
 }
