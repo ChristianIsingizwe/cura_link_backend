@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/doctors")
 @AllArgsConstructor
 public class DoctorController {

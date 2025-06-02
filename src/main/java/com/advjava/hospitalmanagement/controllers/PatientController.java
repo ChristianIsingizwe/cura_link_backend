@@ -4,6 +4,7 @@ import com.advjava.hospitalmanagement.dtos.UserRegisterRequest;
 import com.advjava.hospitalmanagement.entities.UserRole;
 import com.advjava.hospitalmanagement.mappers.UserMapper;
 import com.advjava.hospitalmanagement.repositories.UserRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/patient")
 @AllArgsConstructor
 public class PatientController {
@@ -23,7 +23,7 @@ public class PatientController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerPatient(@RequestBody UserRegisterRequest request) {
+    public ResponseEntity<?> registerPatient(@Valid @RequestBody UserRegisterRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body(Map
             .of("message", "Email already exists."));
