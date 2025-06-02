@@ -3,17 +3,17 @@ package com.advjava.hospitalmanagement.controllers;
 import com.advjava.hospitalmanagement.dtos.CreateAppointmentRequest;
 import com.advjava.hospitalmanagement.mappers.AppointmentMapper;
 import com.advjava.hospitalmanagement.repositories.AppointmentRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/appointments")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AppointmentController {
 
-    private final AppointmentMapper appointmentMapper;
     private final AppointmentRepository appointmentRepository;
+    private final AppointmentMapper appointmentMapper;
 
     @PostMapping
     public ResponseEntity<?> createAppointment(@RequestBody CreateAppointmentRequest request) {
@@ -25,7 +25,7 @@ public class AppointmentController {
     }
 
     @PatchMapping("/update/approve/{id}")
-    public ResponseEntity<?> approveAppointment(@PathVariable Long id) {
+    public ResponseEntity<?> approveAppointment(@PathVariable Integer id) {
         if (!appointmentRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
@@ -35,17 +35,17 @@ public class AppointmentController {
     }
 
     @GetMapping("/doctors/{id}")
-    public ResponseEntity<?> getAllAppointmentsByDoctorId(@PathVariable Long id) {
+    public ResponseEntity<?> getAllAppointmentsByDoctorId(@PathVariable Integer id) {
         return ResponseEntity.ok(appointmentRepository.findByDoctorId(id));
     }
 
     @GetMapping("/patients/{id}")
-    public ResponseEntity<?> getAllAppointmentsByPatientId(@PathVariable Long id) {
+    public ResponseEntity<?> getAllAppointmentsByPatientId(@PathVariable Integer id) {
         return ResponseEntity.ok(appointmentRepository.findByPatientId(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAppointment(@PathVariable Long id) {
+    public ResponseEntity<?> deleteAppointment(@PathVariable Integer id) {
         if (!appointmentRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

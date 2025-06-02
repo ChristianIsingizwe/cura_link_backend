@@ -13,7 +13,7 @@ public class AuthService {
 
     public User getCurrentUser() {
             var authentication= SecurityContextHolder.getContext().getAuthentication();
-            var userId= (Long)authentication.getPrincipal();
+            var userId= (Integer)authentication.getPrincipal();
             return userRepository.findById(userId).orElse(null);
     }
 }

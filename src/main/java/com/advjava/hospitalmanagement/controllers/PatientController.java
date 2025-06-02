@@ -1,6 +1,6 @@
 package com.advjava.hospitalmanagement.controllers;
 
-import com.advjava.hospitalmanagement.dtos.PatientRegisterRequest;
+import com.advjava.hospitalmanagement.dtos.UserRegisterRequest;
 import com.advjava.hospitalmanagement.entities.UserRole;
 import com.advjava.hospitalmanagement.mappers.UserMapper;
 import com.advjava.hospitalmanagement.repositories.UserRepository;
@@ -18,23 +18,45 @@ import java.util.Map;
 @AllArgsConstructor
 public class PatientController {
 
-    private final UserRepository patientRepository;
+    private final UserRepository userRepository;
     private final UserMapper patientMapper;
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerPatient(@RequestBody PatientRegisterRequest request) {
-        if (patientRepository.findByEmail(request.getEmail()).isPresent()) {
+    public ResponseEntity<?> registerPatient(@RequestBody UserRegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             return ResponseEntity.badRequest().body(Map
             .of("message", "Email already exists."));
         }
         var patient = patientMapper.toEntity(request);
         patient.setPassword(passwordEncoder.encode(request.getPassword()));
         patient.setRole(UserRole.PATIENT);
-        patientRepository.save(patient);
+        userRepository.save(patient);
 
         var patientDto = patientMapper.toDto(patient);
         return ResponseEntity.status(HttpStatus.CREATED).body(patientDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePatient(@PathVariable Integer id) {
+        if (userRepository.findById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        userRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllPatients() {
+        return ResponseEntity.ok(userRepository.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPatientById(@PathVariable Integer id) {
+        if (userRepository.findById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(userRepository.findById(id).get());
     }
 
 }

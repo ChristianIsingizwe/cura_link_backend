@@ -1,40 +1,39 @@
-BEGIN;
+-- V1__create_hospital_schema.sql
 
--- Parent table for all users
+-- Users table
 CREATE TABLE users (
-                       id               BIGSERIAL       PRIMARY KEY,
-                       full_name        VARCHAR(255)    NOT NULL,
-                       email            VARCHAR(255)    NOT NULL UNIQUE,
-                       password         VARCHAR(255)    NOT NULL
+    id              SERIAL PRIMARY KEY,
+    full_name       VARCHAR(255),
+    email           VARCHAR(255) NOT NULL UNIQUE,
+    password        VARCHAR(255) NOT NULL,
+    birth_date      TIMESTAMP,
+    role            VARCHAR(50)
 );
 
--- Doctor table inherits id, full_name, email, password
+-- Doctors table
 CREATE TABLE doctors (
-                         specialization      VARCHAR(255)    NOT NULL,
-                         years_experience    INTEGER         NOT NULL,
-                         CONSTRAINT doctors_pkey PRIMARY KEY (id)
-) INHERITS (users);
-
--- Patient table inherits id, full_name, email, password
-CREATE TABLE patients (
-                          age                 INTEGER         NOT NULL,
-                          CONSTRAINT patients_pkey PRIMARY KEY (id)
-) INHERITS (users);
-
-CREATE TABLE appointments (
-                              id                  BIGSERIAL       PRIMARY KEY,
-                              patient_id          BIGINT          NOT NULL,
-                              doctor_id           BIGINT          NOT NULL,
-                              appointment_time    TIMESTAMP       NOT NULL,
-                              approved            BOOLEAN         NOT NULL DEFAULT FALSE,
-                              CONSTRAINT fk_appointment_patient
-                                  FOREIGN KEY (patient_id)
-                                      REFERENCES patients (id)
-                                      ON DELETE CASCADE,
-                              CONSTRAINT fk_appointment_doctor
-                                  FOREIGN KEY (doctor_id)
-                                      REFERENCES doctors (id)
-                                      ON DELETE RESTRICT
+    id              SERIAL PRIMARY KEY,
+    full_name       VARCHAR(255),
+    specialization  VARCHAR(255) NOT NULL
 );
 
-COMMIT;
+-- Appointments table
+CREATE TABLE appointments (
+    id                SERIAL PRIMARY KEY,
+    appointment_time  TIMESTAMP,
+    approved          BOOLEAN NOT NULL DEFAULT FALSE,
+    patient_id        INTEGER NOT NULL,
+    doctor_id         INTEGER NOT NULL,
+        CONSTRAINT fk_appointment_patient
+            FOREIGN KEY (patient_id)
+                REFERENCES users (id)
+                ON DELETE CASCADE,
+        CONSTRAINT fk_appointment_doctor
+            FOREIGN KEY (doctor_id)
+                REFERENCES doctors (id)
+                ON DELETE SET NULL
+);
+
+-- Indexes for faster lookups
+CREATE INDEX idx_appointments_patient ON appointments (patient_id);
+CREATE INDEX idx_appointments_doctor  ON appointments (doctor_id);

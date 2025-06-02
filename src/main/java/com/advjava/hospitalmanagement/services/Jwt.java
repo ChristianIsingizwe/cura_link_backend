@@ -17,8 +17,8 @@ public class Jwt {
         return claims.getExpiration().before(new Date());
     }
 
-    public Long getUserId() {
-        return Long.valueOf(claims.getSubject());
+    public Integer getUserId() {
+        return Integer.valueOf(claims.getSubject());
     }
 
     public UserRole getRole() {

@@ -18,7 +18,7 @@ public class DoctorController {
     private final DoctorMapper doctorMapper;
 
     @GetMapping
-    public ResponseEntity<?> getAllAvailableDoctors() {
+    public ResponseEntity<?> getAllDoctors() {
         var doctors = doctorRepository.findAll();
         return ResponseEntity.ok(doctors);
     }
@@ -40,7 +40,7 @@ public class DoctorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getDoctorById(@PathVariable Long id){
+    public ResponseEntity<?> getDoctorById(@PathVariable Integer id){
         var doctor = doctorRepository.findById(id);
         if (doctor.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -49,7 +49,7 @@ public class DoctorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteDoctorById(@PathVariable Long id){
+    public ResponseEntity<?> deleteDoctorById(@PathVariable Integer id){
         var doctor = doctorRepository.findById(id);
         if (doctor.isEmpty()) {
             return ResponseEntity.notFound().build();

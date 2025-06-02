@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-    Optional<Appointment> findByDoctorId(Long id);
-    Optional<Appointment> findByPatientId(Long id);
+public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
+    Optional<Appointment> findByDoctorId(Integer id);
+    Optional<Appointment> findByPatientId(Integer id);
 }

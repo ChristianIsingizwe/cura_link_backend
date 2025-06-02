@@ -9,6 +9,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CreateAppointmentRequest {
     private LocalDateTime appointmentTime;
-    private Long patientId;
-    private Long doctorId;
+    private Integer patientId;
+    private Integer doctorId;
 }
