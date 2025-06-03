@@ -35,8 +35,7 @@ public class Appointment {
     private Doctor doctor;
 
 
-    public void ApproveAppointment() {
+    public void approveAppointment() {
         this.approved = true;
     }
-
 }

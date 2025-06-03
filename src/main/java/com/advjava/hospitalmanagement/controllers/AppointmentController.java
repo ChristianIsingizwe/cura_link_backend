@@ -30,7 +30,7 @@ public class AppointmentController {
             return ResponseEntity.notFound().build();
         }
         var appointment = appointmentRepository.findById(id).orElseThrow();
-        appointment.ApproveAppointment();
+        appointment.approveAppointment();
         return ResponseEntity.noContent().build();
     }
 

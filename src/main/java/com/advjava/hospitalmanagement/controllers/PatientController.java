@@ -29,6 +29,7 @@ public class PatientController {
             .of("message", "Email already exists."));
         }
         var patient = patientMapper.toEntity(request);
+        System.out.println(patient.getFullName());
         patient.setPassword(passwordEncoder.encode(request.getPassword()));
         patient.setRole(UserRole.PATIENT);
         userRepository.save(patient);

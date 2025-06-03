@@ -7,13 +7,13 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 public class UserRegisterRequest {
     @NotBlank(message = "Full names are required")
-    private String fullNames;
+    private String fullName;
     @NotBlank(message = "Email is required")
     @Email(message = "Email must be a valid email")
     private String email;
@@ -23,6 +23,4 @@ public class UserRegisterRequest {
             message = "Password must be at least 8 characters long, contain at least one uppercase letter, one digit, and one special character."
     )
     private String password;
-    @NotEmpty(message = "Date of birth is required")
-    private LocalDateTime dateOfBirth;
 }

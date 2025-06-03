@@ -45,10 +45,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CorsConfigurationSource corsConfigurationSource) throws Exception {
         http
-
+                .cors( c -> c.configurationSource(corsConfigurationSource))
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors( c -> c.configurationSource(corsConfigurationSource))
                 .authorizeHttpRequests(c -> c
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/patient/register").permitAll()

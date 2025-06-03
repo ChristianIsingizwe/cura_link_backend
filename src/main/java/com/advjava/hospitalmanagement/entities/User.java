@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "users")
@@ -28,9 +28,6 @@ public class User {
 
     @Column(name = "password")
     private String password;
-
-    @Column(name = "birth_date")
-    private LocalDateTime birthDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
