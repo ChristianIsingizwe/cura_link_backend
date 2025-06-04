@@ -23,7 +23,6 @@ public class JwtService {
 
         var claims = Jwts.claims()
                 .subject(user.getId().toString())
-                .add("email", user.getEmail())
                 .add("name", user.getFullName())
                 .add("role", user.getRole())
                 .issuedAt(new Date())

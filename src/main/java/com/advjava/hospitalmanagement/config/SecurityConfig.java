@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(c -> c
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/patient/register").permitAll()
+                        .requestMatchers("/auth/refresh").permitAll()
                         .requestMatchers(HttpMethod.POST, "/doctors/add").hasRole(UserRole.ADMIN.name())
                         .requestMatchers(HttpMethod.DELETE, "/doctors/{id}").hasRole(UserRole.ADMIN.name())
                         .requestMatchers(HttpMethod.DELETE, "/patient/delete/{id}").hasRole(UserRole.ADMIN.name())
