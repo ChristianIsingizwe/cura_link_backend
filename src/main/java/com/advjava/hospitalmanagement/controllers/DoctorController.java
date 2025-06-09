@@ -28,7 +28,7 @@ public class DoctorController {
 
     private final DoctorRepository doctorRepository;
     private final DoctorMapper doctorMapper;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager manualAuthenticationManager;
     private final DoctorJwtService jwtService;
     private final JwtConfig jwtConfig;
 
@@ -81,7 +81,7 @@ public class DoctorController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginDoctor(@RequestBody LoginRequest request, HttpServletResponse response) {
-                authenticationManager.authenticate(
+                manualAuthenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()

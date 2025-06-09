@@ -1,11 +1,17 @@
 package com.advjava.hospitalmanagement.controllers;
 
+import com.advjava.hospitalmanagement.dtos.AppointmentDto;
 import com.advjava.hospitalmanagement.dtos.CreateAppointmentRequest;
+import com.advjava.hospitalmanagement.entities.Appointment;
 import com.advjava.hospitalmanagement.mappers.AppointmentMapper;
 import com.advjava.hospitalmanagement.repositories.AppointmentRepository;
+import com.advjava.hospitalmanagement.repositories.DoctorRepository;
+import com.advjava.hospitalmanagement.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -15,15 +21,40 @@ public class AppointmentController {
 
     private final AppointmentRepository appointmentRepository;
     private final AppointmentMapper appointmentMapper;
+    private final UserRepository userRepository;
+    private final DoctorRepository doctorRepository;
+
 
     @PostMapping
-    public ResponseEntity<?> createAppointment(@RequestBody CreateAppointmentRequest request) {
-        var appointment = appointmentMapper.toEntity(request);
+    public ResponseEntity<AppointmentDto> createAppointment(
+            @RequestBody CreateAppointmentRequest req
+    ) {
+        var patient = userRepository
+                .findById(req.getPatientId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Patient not found"));
+        var doctor = doctorRepository
+                .findById(req.getDoctorId())
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Doctor not found"));
+
+        var appointment = new Appointment();
+        appointment.setAppointmentTime(req.getAppointmentTime());
+        appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
+        appointment.setApproved(false);
         appointmentRepository.save(appointment);
 
-        var appointmentDto = appointmentMapper.toDto(appointment);
-        return ResponseEntity.ok(appointmentDto);
+        var dto = new AppointmentDto(
+                appointment.getId(),
+                patient.getId(),
+                doctor.getId(),
+                appointment.getAppointmentTime(),
+                appointment.getApproved()
+        );
+        return ResponseEntity.ok(dto);
     }
+
 
     @PatchMapping("/update/approve/{id}")
     public ResponseEntity<?> approveAppointment(@PathVariable Integer id) {

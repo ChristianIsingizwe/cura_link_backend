@@ -19,7 +19,7 @@ public class DoctorDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email){
         var doctor = doctorRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
+        System.out.println(doctor.getFullName());
         return new User(
                 doctor.getEmail(),
                 doctor.getPassword(),
