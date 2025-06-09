@@ -2,6 +2,8 @@ package com.advjava.hospitalmanagement.config;
 
 import com.advjava.hospitalmanagement.entities.UserRole;
 import com.advjava.hospitalmanagement.filters.JwtAuthenticationFilter;
+import com.advjava.hospitalmanagement.services.DoctorDetailsServiceImpl;
+import com.advjava.hospitalmanagement.services.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,8 +30,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @AllArgsConstructor
 public class SecurityConfig {
 
-    private UserDetailsService userDetailsService;
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    private UserDetailsServiceImpl userDetailsService;
+    private DoctorDetailsServiceImpl doctorDetailsService;
+    private  JwtAuthenticationFilter jwtAuthenticationFilter;
 
 
     @Bean
@@ -51,13 +54,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(c -> c
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/patient/register").permitAll()
+                        .requestMatchers("/doctors/login").permitAll()
                         .requestMatchers("/auth/refresh").permitAll()
+                        .requestMatchers("/appointments/update/approve/{id}").hasRole(UserRole.DOCTOR.name())
+                        .requestMatchers("/appointments/doctors/{id}").hasRole(UserRole.DOCTOR.name())
                         .requestMatchers(HttpMethod.POST, "/doctors/add").hasRole(UserRole.ADMIN.name())
                         .requestMatchers(HttpMethod.DELETE, "/doctors/{id}").hasRole(UserRole.ADMIN.name())
                         .requestMatchers(HttpMethod.DELETE, "/patient/delete/{id}").hasRole(UserRole.ADMIN.name())
                         .requestMatchers(HttpMethod.GET, "/patient/all").hasRole(UserRole.ADMIN.name())
-                        .requestMatchers("/appointments/update/approve/{id}").hasRole(UserRole.DOCTOR.name())
-                        .requestMatchers("/appointments/doctors/{id}").hasRole(UserRole.DOCTOR.name())
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -75,6 +79,13 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         var provider = new DaoAuthenticationProvider(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
+    @Bean
+    public AuthenticationProvider doctorAuthenticationProvider() {
+        var provider = new DaoAuthenticationProvider(doctorDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }

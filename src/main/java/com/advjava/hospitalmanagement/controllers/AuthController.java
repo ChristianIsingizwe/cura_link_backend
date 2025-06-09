@@ -46,7 +46,6 @@ public class AuthController {
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
         cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
-        cookie.setSecure(true);
         response.addCookie(cookie);
 
         return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
@@ -60,6 +59,7 @@ public class AuthController {
         if (jwt == null || jwt.isExpired()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        System.out.println(jwt.getUserId());
         var user = userRepository.findById(jwt.getUserId()).orElseThrow();
         var accessToken = jwtService.generateAccessToken(user);
 

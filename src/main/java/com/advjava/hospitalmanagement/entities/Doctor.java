@@ -24,10 +24,11 @@ public class Doctor {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "names")
+    @Column(name = "full_name")
     private String fullName;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @Column(nullable = false)

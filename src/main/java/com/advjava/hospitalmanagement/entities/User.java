@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "users")
@@ -23,7 +22,7 @@ public class User {
     @Column(name = "full_name")
     private String fullName;
 
-    @Column(nullable = false)
+    @Column(name = "email")
     private String email;
 
     @Column(name = "password")

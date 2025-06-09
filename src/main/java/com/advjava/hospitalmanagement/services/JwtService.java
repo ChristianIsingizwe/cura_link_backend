@@ -46,7 +46,7 @@ public class JwtService {
     }
 
 
-    private Claims getClaims(String token) {
+    private Claims  getClaims(String token) {
         return Jwts.parser()
                 .verifyWith(jwtConfig.getSecretKey())
                 .build()
